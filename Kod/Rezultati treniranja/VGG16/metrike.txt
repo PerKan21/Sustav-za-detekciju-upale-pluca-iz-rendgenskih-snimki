@@ -1,0 +1,14 @@
+METRIKE — VGG16 (test skup)
+================================================
+Prag odluke           : 0.416
+Recall (osjetljivost) : 90.00 %
+Specifičnost          : 95.30 %
+Precision             : 95.04 %
+F1                    : 92.45 %
+Accuracy              : 92.65 %
+ROC-AUC               : 0.9743
+
+Matrica konfuzije (redak = stvarno, stupac = predviđeno):
+             NORMAL   PNEUMONIA
+  NORMAL        953          47
+  PNEUMONIA     100         900

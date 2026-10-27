@@ -1,0 +1,14 @@
+METRIKE — CNN (test skup)
+================================================
+Prag odluke           : 0.436
+Recall (osjetljivost) : 93.10 %
+Specifičnost          : 87.70 %
+Precision             : 88.33 %
+F1                    : 90.65 %
+Accuracy              : 90.40 %
+ROC-AUC               : 0.9666
+
+Matrica konfuzije (redak = stvarno, stupac = predviđeno):
+             NORMAL   PNEUMONIA
+  NORMAL        877         123
+  PNEUMONIA      69         931

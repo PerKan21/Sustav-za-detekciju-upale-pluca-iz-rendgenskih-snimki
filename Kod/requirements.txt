@@ -1,0 +1,22 @@
+# ============================================================
+# 1) TORCH + TORCHVISION  —  instaliraj ODVOJENO, s CUDA indexom!
+#    (obični "pip install torch" na Windowsu = CPU verzija)
+#
+#    CUDA 12.8 (preporuka):
+#      pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#    Stariji driver? CUDA 12.6:
+#      pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+#
+#    Treba samo nov NVIDIA driver (ne i CUDA toolkit) — wheel nosi svoj runtime.
+# ============================================================
+
+# 2) Ostale ovisnosti (s PyPI-ja):
+#    pip install -r requirements.txt
+scikit-learn>=1.1
+numpy>=1.23
+Pillow>=9.0
+matplotlib>=3.5
+openpyxl>=3.0
+
+# Opcionalno — drag & drop u GUI-ju (radi i bez ovoga, samo na klik)
+tkinterdnd2>=0.3
