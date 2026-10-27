@@ -5,13 +5,13 @@ Aplikacija analizira rendgenske snimke prsnog koša i za svaku snimku odlučuje 
 Uspoređena su dva modela dubokog učenja:
 
 - **Vlastita konvolucijska mreža (CNN)** trenirana od nule, s četiri konvolucijska bloka i Squeeze-and-Excitation mehanizmom.
-- **VGG16** s prijenosom učenja, gdje se mreža prethodno istrenirana na skupu ImageNet prilagođava rendgenskim snimkama.
+- **VGG16** s prijenosnim učenjem, gdje se mreža prethodno istrenirana na skupu ImageNet prilagođava rendgenskim snimkama.
 
 Projekt je izrađen u sklopu konstrukcijskih vježbi iz kolegija Strojno učenje na Fakultetu elektrotehnike, računarstva i informacijskih tehnologija Osijek. Detaljan opis nalazi se u [projektnoj dokumentaciji](Dokumentacija/Dokumentacija.pdf), a pregled u [prezentaciji](Dokumentacija/Prezentacija.pptx).
 
 > Ovo je studentski projekt i nije medicinski uređaj. Rezultati ne smiju služiti kao zamjena za mišljenje liječnika.
 
-![Rezultat analize snimke s upalom pluća](Dokumentacija/slike/sucelje_upala.png)
+![Rezultat analize snimke s upalom pluća](Slike/sucelje_upala.png)
 
 ## Sadržaj paketa
 
@@ -31,15 +31,11 @@ Modeli/
     cnn_best.pth           istrenirani vlastiti CNN model (uključen u paket)
 Dokumentacija/
     Dokumentacija.pdf      projektna dokumentacija
-    Dokumentacija.tex      LaTeX izvor dokumentacije
     Prezentacija.pptx      prezentacija projekta
-    slike/                 slike korištene u dokumentaciji i ovom opisu
-Build/
-    build.bat              izrada samostalne exe datoteke
-    DetekcijaUpalePluca.spec
+Slike/                     snimke sučelja korištene u ovom opisu
 ```
 
-### Što je u paketu, a što nije
+## Što je u paketu, a što nije
 
 **Vlastiti CNN model je uključen** u mapi `Modeli/` i ima oko 5 MB. S njim aplikacija radi odmah nakon preuzimanja, bez treniranja i bez interneta.
 
@@ -68,7 +64,7 @@ Grafičko sučelje pokreće se naredbom:
 python Kod/main.py
 ```
 
-![Aplikacija odmah nakon pokretanja](Dokumentacija/slike/sucelje_pokrenuto.png)
+![Aplikacija odmah nakon pokretanja](Slike/sucelje_pokrenuto.png)
 
 Rad s aplikacijom ide u četiri koraka:
 
@@ -79,9 +75,9 @@ Rad s aplikacijom ide u četiri koraka:
 
 Za svaku snimku prikazuju se konačna odluka, vjerojatnosti obje klase, prag odluke i korišteni model. Crvena boja označava upalu pluća, a zelena normalan nalaz.
 
-![Rezultat analize normalne snimke](Dokumentacija/slike/sucelje_normalno.png)
+![Rezultat analize normalne snimke](Slike/sucelje_normalno.png)
 
-### Terminalni način rada
+## Terminalni način rada
 
 Snimke se mogu analizirati i bez grafičkog sučelja:
 
@@ -98,7 +94,7 @@ Naredba ispisuje tablicu rezultata u terminalu, a izvještaj i Grad-CAM slike sp
 3. **Odluka.** Vjerojatnost se uspoređuje s pragom odluke. Prag se ne postavlja ručno na 0,5, nego se bira na validacijskom skupu pomoću Youdenova indeksa, uz uvjet da osjetljivost bude najmanje 85 %. Time se smanjuje broj propuštenih upala.
 4. **Objašnjenje.** Grad-CAM iz zadnjeg konvolucijskog sloja računa koliko je koje područje snimke pridonijelo odluci i to prikazuje kao toplinsku kartu preko originalne snimke.
 
-Tijekom treniranja koriste se augmentacija (nasumično izrezivanje, zrcaljenje, rotacija, promjena svjetline i kontrasta, brisanje dijelova slike), uravnoteženo uzorkovanje klasa, dropout, weight decay i rano zaustavljanje. VGG16 se trenira u dvije faze. U prvoj se uči samo novi klasifikacijski sloj, a u drugoj se odmrzava i fino ugađa zadnji konvolucijski blok.
+Tijekom treniranja koriste se augmentacija (nasumično izrezivanje, zrcaljenje, rotacija, promjena svjetline i kontrasta, brisanje dijelova slike), uravnoteženo uzorkovanje klasa, *dropout* slojevi, regularizacija *weight decay* i rano zaustavljanje. VGG16 se trenira u dvije faze. U prvoj se uči samo novi klasifikacijski sloj, a u drugoj se odmrzava i fino ugađa zadnji konvolucijski blok.
 
 ## Rezultati
 
@@ -113,12 +109,14 @@ Vlastiti CNN propušta manje upala (veća osjetljivost), dok VGG16 rjeđe progla
 
 | | CNN | VGG16 |
 |---|---|---|
-| Matrica konfuzije | ![Matrica konfuzije CNN](Dokumentacija/slike/matrica_cnn.png) | ![Matrica konfuzije VGG16](Dokumentacija/slike/matrica_vgg.png) |
-| ROC krivulja | ![ROC krivulja CNN](Dokumentacija/slike/roc_cnn.png) | ![ROC krivulja VGG16](Dokumentacija/slike/roc_vgg16.png) |
+| Matrica konfuzije | ![Matrica konfuzije CNN](Kod/Rezultati%20treniranja/CNN/matrica_konfuzije.png) | ![Matrica konfuzije VGG16](Kod/Rezultati%20treniranja/VGG16/matrica_konfuzije.png) |
+| ROC krivulja | ![ROC krivulja CNN](Kod/Rezultati%20treniranja/CNN/roc_krivulja.png) | ![ROC krivulja VGG16](Kod/Rezultati%20treniranja/VGG16/roc_krivulja.png) |
 
 Grafovi tijeka treniranja i metrike u tekstualnom obliku nalaze se u mapi [Kod/Rezultati treniranja](Kod/Rezultati%20treniranja).
 
-**Ograničenja.** Testni skup je uravnotežen, pa su preciznost i točnost veće nego što bi bile uz stvarnu učestalost bolesti. Kategorija „No Lung Opacity / Not Normal” iz RSNA skupa nije korištena, što zadatak čini lakšim od stvarne kliničke situacije. Sustav nije provjeren na snimkama iz drugih bolnica i uređaja.
+## Ograničenja
+
+Testni skup je uravnotežen, pa su preciznost i točnost veće nego što bi bile uz stvarnu učestalost bolesti. Kategorija „No Lung Opacity / Not Normal” iz RSNA skupa nije korištena, što zadatak čini lakšim od stvarne kliničke situacije. Sustav nije provjeren na snimkama iz drugih bolnica i uređaja.
 
 ## Podaci
 
@@ -154,21 +152,6 @@ Usporedba spremljenih modela na testnom skupu pokreće se naredbom:
 ```bash
 python Kod/main.py eval
 ```
-
-## Izrada exe datoteke
-
-Aplikacija se može zapakirati u samostalnu exe datoteku za Windows, koja ne zahtijeva instaliran Python:
-
-```bash
-pip install pyinstaller
-Build\build.bat
-```
-
-Rezultat je mapa `Build/dist/DetekcijaUpalePluca/`. Modeli iz mape `Modeli/` i logo kopiraju se automatski pokraj exe datoteke. Mapa zauzima oko 5 GB zbog PyTorcha s CUDA bibliotekama, pa se na drugo računalo prenosi cijela.
-
-## Dokumentacija
-
-Dokumentacija se prevodi u mapi `Dokumentacija/` s dva prolaza naredbe `pdflatex Dokumentacija.tex`.
 
 ## Autor
 
